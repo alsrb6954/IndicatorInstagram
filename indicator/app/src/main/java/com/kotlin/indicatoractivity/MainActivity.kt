@@ -21,8 +21,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     inner class ViewPagerAdapter(fragment:FragmentManager):FragmentStatePagerAdapter(fragment){
-        override fun getItem(position: Int) = Fragment()
-
-        override fun getCount() = 5
+        override fun getItem(position: Int) = com.kotlin.indicatoractivity.Fragment()
+        override fun getCount() = 10
     }
 }
