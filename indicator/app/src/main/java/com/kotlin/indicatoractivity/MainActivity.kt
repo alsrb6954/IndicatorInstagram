@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity() {
         val viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
 
         viewPager.adapter = viewPagerAdapter
-//        indicator.mIndicatorImg = resources.getDrawable(R.drawable.slide_indicator, null)
         viewPager.setPageIndicatorView(indicator)
     }
 

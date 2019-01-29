@@ -3,6 +3,7 @@ package com.kotlin.indicatoractivity
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -39,28 +40,35 @@ class PageIndicatorView:LinearLayout {
         removeAllViews()
         var imageView:ImageView
         var lp:LayoutParams
-        for(index in 0 until totalPageCount) {
-            if(index == 5){
-                break
+        for(i in 0 until totalPageCount) {
+            var index = i
+            imageView = ImageView(context)
+            if (totalPageCount == 4 || totalPageCount == 5) {
+                index = 0
             }
             val state = when(index){
                 3 ->{
+                    imageView.transitionName = "1"
                     mIndicatorMediumImg?.constantState
                 }
                 4->{
+                    imageView.transitionName = "2"
                     mIndicatorSmallImg?.constantState
                 }
                 else ->{
+                    imageView.transitionName = "0"
                     mIndicatorImg?.constantState
                 }
             }
+            if(i >= 5){
+                imageView.visibility = View.GONE
+            }
             state?.let {
-                imageView = ImageView(context)
                 lp = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-                if(index != totalPageCount - 1){
+                if(i != totalPageCount - 1){
                     lp.marginEnd = mDimen
                 }
-                if(index != 0){
+                if(i != 0){
                     lp.marginStart = mDimen
                 }
                 imageView.layoutParams = lp
@@ -76,6 +84,35 @@ class PageIndicatorView:LinearLayout {
         if (currPageNumber >= childCount) {
             return
         }
+        val currentView = getChildAt(currPageNumber) as ImageView
+        var nextView:ImageView? = null
+        var nextNextView:ImageView? = null
+        if(currPageNumber + 1 < childCount) {
+            nextView = getChildAt(currPageNumber+1) as ImageView
+        }
+        if(currPageNumber + 2 < childCount) {
+            nextNextView = getChildAt(currPageNumber+2) as ImageView
+        }
+
+        when(currentView.transitionName){
+            "0"->{
+
+            }
+            "1"->{
+                currentView.setImageDrawable(mIndicatorImg?.constantState?.newDrawable()?.mutate())
+                currentView.transitionName = "0"
+                nextView?.let {
+                    it.setImageDrawable(mIndicatorMediumImg?.constantState?.newDrawable()?.mutate())
+                    it.transitionName = "1"
+                }
+                nextNextView?.let {
+                    it.visibility = View.VISIBLE
+                    it.setImageDrawable(mIndicatorSmallImg?.constantState?.newDrawable()?.mutate())
+                    it.transitionName = "2"
+                }
+            }
+        }
+
         getChildAt(mCurrPage).isSelected = false
         mCurrPage = currPageNumber
         getChildAt(mCurrPage).isSelected = true
