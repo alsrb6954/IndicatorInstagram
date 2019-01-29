@@ -2,6 +2,8 @@ package com.kotlin.indicatoractivity
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.DrawableContainer
+import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
@@ -169,7 +171,6 @@ class PageIndicatorView:LinearLayout {
                 }
             }
         }
-
         getChildAt(mCurrPage).isSelected = false
         mCurrPage = currPageNumber
         getChildAt(mCurrPage).isSelected = true
