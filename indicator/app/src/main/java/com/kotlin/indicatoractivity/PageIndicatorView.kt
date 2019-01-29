@@ -6,6 +6,8 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.LinearLayout
 
@@ -16,6 +18,9 @@ class PageIndicatorView:LinearLayout {
     var mIndicatorImg: Drawable? = null
     var mIndicatorMediumImg: Drawable? = null
     var mIndicatorSmallImg: Drawable? = null
+    var zeroAnimation: Animation? = null
+    var oneAnimation: Animation? = null
+    var oneContraryAnimation: Animation? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
@@ -27,6 +32,9 @@ class PageIndicatorView:LinearLayout {
         if (mIndicatorImg == null) mIndicatorImg = resources.getDrawable(R.drawable.slide_indicator, null)
         if (mIndicatorMediumImg == null) mIndicatorMediumImg = resources.getDrawable(R.drawable.slide_indicator_medium, null)
         if (mIndicatorSmallImg == null) mIndicatorSmallImg = resources.getDrawable(R.drawable.slide_indicator_small, null)
+        if (zeroAnimation == null) zeroAnimation = AnimationUtils.loadAnimation(context, R.anim.zero_scale)
+        if (oneAnimation == null) oneAnimation = AnimationUtils.loadAnimation(context, R.anim.one_scale)
+        if (oneContraryAnimation == null) oneContraryAnimation = AnimationUtils.loadAnimation(context, R.anim.one_contrary_scale)
         orientation = HORIZONTAL
         a.recycle()
     }
@@ -84,7 +92,6 @@ class PageIndicatorView:LinearLayout {
         if (currPageNumber >= childCount) {
             return
         }
-
         if(mCurrPage<currPageNumber){
             val currentView = getChildAt(currPageNumber) as ImageView
             val nextView = if(currPageNumber + 1 < childCount) { getChildAt(currPageNumber+1) as ImageView } else null
@@ -94,22 +101,27 @@ class PageIndicatorView:LinearLayout {
             val backBackBackView = if(currPageNumber - 5 >= 0) { getChildAt(currPageNumber-5) as ImageView } else null
             when(currentView.transitionName){
                 "1"->{
+                    currentView.startAnimation(oneAnimation)
                     currentView.setImageDrawable(mIndicatorImg?.constantState?.newDrawable()?.mutate())
                     currentView.transitionName = "0"
                     nextView?.let {
+                        it.startAnimation(oneAnimation)
                         it.setImageDrawable(mIndicatorMediumImg?.constantState?.newDrawable()?.mutate())
                         it.transitionName = "1"
                     }
                     nextNextView?.let {
                         it.visibility = View.VISIBLE
+                        it.startAnimation(zeroAnimation)
                         it.setImageDrawable(mIndicatorSmallImg?.constantState?.newDrawable()?.mutate())
                         it.transitionName = "2"
                     }
                     backView?.let {
+                        it.startAnimation(oneContraryAnimation)
                         it.setImageDrawable(mIndicatorMediumImg?.constantState?.newDrawable()?.mutate())
                         it.transitionName = "1"
                     }
                     backBackView?.let {
+                        it.startAnimation(oneContraryAnimation)
                         it.setImageDrawable(mIndicatorSmallImg?.constantState?.newDrawable()?.mutate())
                         it.transitionName = "2"
                     }
@@ -127,13 +139,16 @@ class PageIndicatorView:LinearLayout {
             val backBackView = if(currPageNumber - 2 >= 0) { getChildAt(currPageNumber-2) as ImageView } else null
             when(currentView.transitionName){
                 "1"->{
+                    currentView.startAnimation(oneAnimation)
                     currentView.setImageDrawable(mIndicatorImg?.constantState?.newDrawable()?.mutate())
                     currentView.transitionName = "0"
                     nextView?.let {
+                        it.startAnimation(oneContraryAnimation)
                         it.setImageDrawable(mIndicatorMediumImg?.constantState?.newDrawable()?.mutate())
                         it.transitionName = "1"
                     }
                     nextNextView?.let {
+                        it.startAnimation(oneContraryAnimation)
                         it.setImageDrawable(mIndicatorSmallImg?.constantState?.newDrawable()?.mutate())
                         it.transitionName = "2"
                     }
@@ -141,11 +156,13 @@ class PageIndicatorView:LinearLayout {
                         it.visibility = View.GONE
                     }
                     backView?.let {
+                        it.startAnimation(oneAnimation)
                         it.setImageDrawable(mIndicatorMediumImg?.constantState?.newDrawable()?.mutate())
                         it.transitionName = "1"
                     }
                     backBackView?.let {
                         it.visibility = View.VISIBLE
+                        it.startAnimation(zeroAnimation)
                         it.setImageDrawable(mIndicatorSmallImg?.constantState?.newDrawable()?.mutate())
                         it.transitionName = "2"
                     }
