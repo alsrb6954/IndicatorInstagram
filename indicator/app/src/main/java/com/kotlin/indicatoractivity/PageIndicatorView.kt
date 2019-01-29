@@ -84,31 +84,71 @@ class PageIndicatorView:LinearLayout {
         if (currPageNumber >= childCount) {
             return
         }
-        val currentView = getChildAt(currPageNumber) as ImageView
-        var nextView:ImageView? = null
-        var nextNextView:ImageView? = null
-        if(currPageNumber + 1 < childCount) {
-            nextView = getChildAt(currPageNumber+1) as ImageView
-        }
-        if(currPageNumber + 2 < childCount) {
-            nextNextView = getChildAt(currPageNumber+2) as ImageView
-        }
 
-        when(currentView.transitionName){
-            "0"->{
-
-            }
-            "1"->{
-                currentView.setImageDrawable(mIndicatorImg?.constantState?.newDrawable()?.mutate())
-                currentView.transitionName = "0"
-                nextView?.let {
-                    it.setImageDrawable(mIndicatorMediumImg?.constantState?.newDrawable()?.mutate())
-                    it.transitionName = "1"
+        if(mCurrPage<currPageNumber){
+            val currentView = getChildAt(currPageNumber) as ImageView
+            val nextView = if(currPageNumber + 1 < childCount) { getChildAt(currPageNumber+1) as ImageView } else null
+            val nextNextView = if(currPageNumber + 2 < childCount) { getChildAt(currPageNumber+2) as ImageView } else null
+            val backView = if(currPageNumber - 3 >= 0) { getChildAt(currPageNumber-3) as ImageView } else null
+            val backBackView = if(currPageNumber - 4 >= 0) { getChildAt(currPageNumber-4) as ImageView } else null
+            val backBackBackView = if(currPageNumber - 5 >= 0) { getChildAt(currPageNumber-5) as ImageView } else null
+            when(currentView.transitionName){
+                "1"->{
+                    currentView.setImageDrawable(mIndicatorImg?.constantState?.newDrawable()?.mutate())
+                    currentView.transitionName = "0"
+                    nextView?.let {
+                        it.setImageDrawable(mIndicatorMediumImg?.constantState?.newDrawable()?.mutate())
+                        it.transitionName = "1"
+                    }
+                    nextNextView?.let {
+                        it.visibility = View.VISIBLE
+                        it.setImageDrawable(mIndicatorSmallImg?.constantState?.newDrawable()?.mutate())
+                        it.transitionName = "2"
+                    }
+                    backView?.let {
+                        it.setImageDrawable(mIndicatorMediumImg?.constantState?.newDrawable()?.mutate())
+                        it.transitionName = "1"
+                    }
+                    backBackView?.let {
+                        it.setImageDrawable(mIndicatorSmallImg?.constantState?.newDrawable()?.mutate())
+                        it.transitionName = "2"
+                    }
+                    backBackBackView?.let {
+                        it.visibility = View.GONE
+                    }
                 }
-                nextNextView?.let {
-                    it.visibility = View.VISIBLE
-                    it.setImageDrawable(mIndicatorSmallImg?.constantState?.newDrawable()?.mutate())
-                    it.transitionName = "2"
+            }
+        }else{
+            val currentView = getChildAt(currPageNumber) as ImageView
+            val nextView = if(currPageNumber + 3 < childCount) { getChildAt(currPageNumber+3) as ImageView } else null
+            val nextNextView = if(currPageNumber + 4 < childCount) { getChildAt(currPageNumber+4) as ImageView } else null
+            val nextNextNextView = if(currPageNumber + 5 < childCount) { getChildAt(currPageNumber+5) as ImageView } else null
+            val backView = if(currPageNumber - 1 >= 0) { getChildAt(currPageNumber-1) as ImageView } else null
+            val backBackView = if(currPageNumber - 2 >= 0) { getChildAt(currPageNumber-2) as ImageView } else null
+            when(currentView.transitionName){
+                "1"->{
+                    currentView.setImageDrawable(mIndicatorImg?.constantState?.newDrawable()?.mutate())
+                    currentView.transitionName = "0"
+                    nextView?.let {
+                        it.setImageDrawable(mIndicatorMediumImg?.constantState?.newDrawable()?.mutate())
+                        it.transitionName = "1"
+                    }
+                    nextNextView?.let {
+                        it.setImageDrawable(mIndicatorSmallImg?.constantState?.newDrawable()?.mutate())
+                        it.transitionName = "2"
+                    }
+                    nextNextNextView?.let {
+                        it.visibility = View.GONE
+                    }
+                    backView?.let {
+                        it.setImageDrawable(mIndicatorMediumImg?.constantState?.newDrawable()?.mutate())
+                        it.transitionName = "1"
+                    }
+                    backBackView?.let {
+                        it.visibility = View.VISIBLE
+                        it.setImageDrawable(mIndicatorSmallImg?.constantState?.newDrawable()?.mutate())
+                        it.transitionName = "2"
+                    }
                 }
             }
         }
